@@ -33,7 +33,7 @@ export function SiteHeader({
       ]
 
   return (
-    <header className="site-header">
+    <header className={menuOpen ? 'site-header menu-open' : 'site-header'}>
       <a className="brand-mark" href={adminMode ? '#partidas-admin' : '#home'}>
         <span className="brand-badge">SC</span>
         <div>
@@ -44,9 +44,11 @@ export function SiteHeader({
       </a>
 
       <button
-        className="menu-toggle"
+        className={menuOpen ? 'menu-toggle open' : 'menu-toggle'}
         type="button"
-        aria-label="Abrir menu"
+        aria-label={menuOpen ? 'Fechar menu' : 'Abrir menu'}
+        aria-expanded={menuOpen}
+        aria-controls="site-header-panel"
         onClick={() => setMenuOpen((value) => !value)}
       >
         <span />
@@ -54,25 +56,41 @@ export function SiteHeader({
         <span />
       </button>
 
-      <nav className={menuOpen ? 'site-nav open' : 'site-nav'}>
-        {navItems.map((item) => (
-          <a key={item.href} href={item.href} onClick={() => setMenuOpen(false)}>
-            {item.label}
-          </a>
-        ))}
-      </nav>
+      <div className={menuOpen ? 'site-header-panel open' : 'site-header-panel'} id="site-header-panel">
+        <nav className="site-nav">
+          {navItems.map((item) => (
+            <a key={item.href} href={item.href} onClick={() => setMenuOpen(false)}>
+              {item.label}
+            </a>
+          ))}
+        </nav>
 
-      <div className="site-header-actions">
-        <div className="user-badge user-badge-inline">
-          <span>{currentUserRole === 'admin' ? 'Administrador' : 'Jogador'}</span>
-          <strong>{currentUserName}</strong>
+        <div className="site-header-actions">
+          <div className="user-badge user-badge-inline">
+            <span>{currentUserRole === 'admin' ? 'Administrador' : 'Jogador'}</span>
+            <strong>{currentUserName}</strong>
+          </div>
+          <button
+            className="ghost-button header-button"
+            type="button"
+            onClick={() => {
+              setMenuOpen(false)
+              onRefresh()
+            }}
+          >
+            Atualizar
+          </button>
+          <button
+            className="ghost-button header-button"
+            type="button"
+            onClick={() => {
+              setMenuOpen(false)
+              onLogout()
+            }}
+          >
+            Sair
+          </button>
         </div>
-        <button className="ghost-button header-button" type="button" onClick={onRefresh}>
-          Atualizar
-        </button>
-        <button className="ghost-button header-button" type="button" onClick={onLogout}>
-          Sair
-        </button>
       </div>
     </header>
   )
